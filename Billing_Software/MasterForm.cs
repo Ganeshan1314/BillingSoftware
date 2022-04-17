@@ -46,7 +46,7 @@ namespace Billing_Software
         private void userDetailsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Hide();
-            userdetails user = new userdetails();
+            ApprovalList user = new ApprovalList();
             user.Show();
         }
 

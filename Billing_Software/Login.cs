@@ -17,14 +17,10 @@ namespace Billing_Software
         string constr = ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString;
         public Login()
         {
-
             InitializeComponent();
         }
-
         private void btn_login_Click(object sender, EventArgs e)
         {
-            
-            
             SqlConnection con = new SqlConnection(constr);
             con.Open();
             SqlCommand cmd = new SqlCommand();
@@ -33,23 +29,29 @@ namespace Billing_Software
             cmd.Connection = con;
             cmd.Parameters.AddWithValue("@username", txt_username.Text.Trim());
             cmd.Parameters.AddWithValue("@password", txt_password.Text.Trim());
-            cmd.Parameters.AddWithValue("@Request_Status", "Approved");
             SqlDataAdapter adp = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             adp.Fill(dt);
             if(dt.Rows.Count > 0)
             {
-                this.Hide();
-                Dashboard reg = new Dashboard();
-                reg.Show();
+                int StatusID = Convert.ToInt32(dt.Rows[0]["StatusID"]);
+                if(StatusID == 1)
+                {
+                    MessageBox.Show("You Have Already Requested, Pending for Admin Approval");
+                }
+                if(StatusID == 2)
+                {
+                    this.Hide();
+                    Dashboard Dashboard = new Dashboard();
+                    Dashboard.Show();
+                }
+            }
+            else
+            {
+                MessageBox.Show("You Dont Have The access Please click register button");
             }
             con.Close();
-            
-
-
-
         }
-
         private void btn_Register_Click(object sender, EventArgs e)
         {
             this.Close();

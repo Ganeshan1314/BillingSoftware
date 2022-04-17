@@ -101,9 +101,6 @@
     <Reference Include="CrystalDecisions.Windows.Forms">
       <HintPath>c:\program files (x86)\sap businessobjects\crystal reports for .net framework 4.0\common\sap businessobjects enterprise xi 4.0\win32_x86\dotnet\CrystalDecisions.Windows.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
-    </Reference>
     <Reference Include="FlashControlV71, Version=1.0.3187.32366, Culture=neutral, PublicKeyToken=692fbea5521e1304">
       <HintPath>..\packages\CrystalReports.FlashControlV71.13.0.3501\lib\net20\FlashControlV71.dll</HintPath>
     </Reference>
@@ -136,12 +133,6 @@
     </Compile>
     <Compile Include="Add_Food_Item.Designer.cs">
       <DependentUpon>Add_Food_Item.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ApprovedList.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ApprovedList.Designer.cs">
-      <DependentUpon>ApprovedList.cs</DependentUpon>
     </Compile>
     <Compile Include="AutoComplete.cs">
       <SubType>Form</SubType>
@@ -222,17 +213,14 @@
     <Compile Include="Sample1.Designer.cs">
       <DependentUpon>Sample1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ApprovalList.cs">
+    <Compile Include="userdetails.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ApprovalList.Designer.cs">
-      <DependentUpon>ApprovalList.cs</DependentUpon>
+    <Compile Include="userdetails.Designer.cs">
+      <DependentUpon>userdetails.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Add_Food_Item.resx">
       <DependentUpon>Add_Food_Item.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ApprovedList.resx">
-      <DependentUpon>ApprovedList.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AutoComplete.resx">
       <DependentUpon>AutoComplete.cs</DependentUpon>
@@ -277,8 +265,8 @@
     <EmbeddedResource Include="Sample1.resx">
       <DependentUpon>Sample1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ApprovalList.resx">
-      <DependentUpon>ApprovalList.cs</DependentUpon>
+    <EmbeddedResource Include="userdetails.resx">
+      <DependentUpon>userdetails.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="App.config">
       <SubType>Designer</SubType>

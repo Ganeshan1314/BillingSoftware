@@ -430,8 +430,6 @@ namespace Billing_Software
                 }
             }
         }
-        
-
         private void gv_Food_List_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             int row = gv_Food_List.CurrentCell.RowIndex;

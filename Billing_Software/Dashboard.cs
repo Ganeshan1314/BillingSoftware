@@ -21,7 +21,7 @@ namespace Billing_Software
             Drop_Down.Items.Add("--Select--");
             Drop_Down.Items.Add("Date");
             Drop_Down.Items.Add("Month ");
-            Drop_Down.Items.Add("--Select--");
+            
         }
 
         private void user_btn_Click(object sender, EventArgs e)
