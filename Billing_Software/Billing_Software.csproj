@@ -370,6 +370,27 @@
   <ItemGroup>
     <None Include="Resources\91Io5sXiDqL.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\boxed-water-is-better-ivfdGY8C_rw-unsplash.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\compressjpgboxed_water_is_better_ivfdGY8C_rw_unsplash_11zon__1_-compress1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\istockphoto-472899538-170667a.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imgonline-com-ua-resize-YIkOvFoern.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imgonline-com-ua-resize-KpmRFpZO3P.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imgonline-com-ua-resize-GHWId1WbMG1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\imgonline-com-ua-resize-0y4qGmcQ1Ks.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

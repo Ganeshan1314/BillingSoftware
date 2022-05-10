@@ -32,7 +32,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Gridview1 = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
             this.UniqueID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Emp_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.First_Name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,12 +39,15 @@
             this.UserType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Department = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txt_SearchName = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Gridview1)).BeginInit();
             this.SuspendLayout();
             // 
             // Gridview1
             // 
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Gridview1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
@@ -73,24 +75,12 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.Gridview1.DefaultCellStyle = dataGridViewCellStyle3;
             this.Gridview1.Location = new System.Drawing.Point(160, 175);
-            this.Gridview1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Gridview1.Margin = new System.Windows.Forms.Padding(4);
             this.Gridview1.Name = "Gridview1";
             this.Gridview1.RowHeadersWidth = 51;
             this.Gridview1.Size = new System.Drawing.Size(1556, 382);
             this.Gridview1.TabIndex = 0;
             this.Gridview1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Gridview1_CellContentClick);
-            // 
-            // label1
-            // 
-            this.label1.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.label1.Font = new System.Drawing.Font("Microsoft Tai Le", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.SystemColors.Desktop;
-            this.label1.Location = new System.Drawing.Point(705, 83);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(366, 47);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Pending Approval";
             // 
             // UniqueID
             // 
@@ -149,20 +139,59 @@
             this.Department.Name = "Department";
             this.Department.Width = 125;
             // 
-            // userdetails
+            // label1
+            // 
+            this.label1.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.label1.Font = new System.Drawing.Font("Microsoft Tai Le", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.SystemColors.Desktop;
+            this.label1.Location = new System.Drawing.Point(705, 83);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(366, 47);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Pending Approval";
+            // 
+            // txt_SearchName
+            // 
+            this.txt_SearchName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txt_SearchName.Location = new System.Drawing.Point(1486, 120);
+            this.txt_SearchName.Margin = new System.Windows.Forms.Padding(4);
+            this.txt_SearchName.Multiline = true;
+            this.txt_SearchName.Name = "txt_SearchName";
+            this.txt_SearchName.Size = new System.Drawing.Size(216, 36);
+            this.txt_SearchName.TabIndex = 2;
+            this.txt_SearchName.TextChanged += new System.EventHandler(this.txt_username_TextChanged);
+            // 
+            // label2
+            // 
+            this.label2.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(1358, 131);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(120, 25);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Search";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // ApprovalList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::Billing_Software.Properties.Resources._1900901;
             this.ClientSize = new System.Drawing.Size(1729, 651);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.txt_SearchName);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Gridview1);
-            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.Name = "userdetails";
+            this.Margin = new System.Windows.Forms.Padding(5);
+            this.Name = "ApprovalList";
             this.Text = "userdetails";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Controls.SetChildIndex(this.Gridview1, 0);
             this.Controls.SetChildIndex(this.label1, 0);
+            this.Controls.SetChildIndex(this.txt_SearchName, 0);
+            this.Controls.SetChildIndex(this.label2, 0);
             ((System.ComponentModel.ISupportInitialize)(this.Gridview1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -180,5 +209,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn UserType;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn Department;
+        private System.Windows.Forms.TextBox txt_SearchName;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -11,6 +11,7 @@ using System.Configuration;
 using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 using System.Globalization;
+using Dapper;
 
 namespace Billing_Software
 {
@@ -19,8 +20,6 @@ namespace Billing_Software
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
         public Food_Items_Bill()
         {
-            
-            
             InitializeComponent();
             gv_Food_List.CurrentCell = gv_Food_List.Rows[0].Cells[1];
             gv_Food_List.CurrentCell.Selected = true;
@@ -128,9 +127,10 @@ namespace Billing_Software
         }
         private void Btn_checkout_Click(object sender, EventArgs e)
         {
-
             try
             {
+                Random random = new Random();
+                int RandomNumber = random.Next(10);
                 con.Open();
                 int Bill_id = 0;
                 if (gv_Food_List.Rows.Count > 1)
@@ -148,28 +148,31 @@ namespace Billing_Software
                     {
                         Bill_id = 1;
                     }
+                    Guid Bill_Id = Guid.NewGuid();
+                    var ParameterBillMaster = new DynamicParameters();
+                    ParameterBillMaster.Add("@Bill_Id", Bill_Id);
+                    ParameterBillMaster.Add("@CreatedBy","Admin");
+                    ParameterBillMaster.Add("@CreatedDate",DateTime.Now);
+                    con.Execute("insertBillMaster", ParameterBillMaster,commandType:CommandType.StoredProcedure);
                     for (int j = 0; j < gv_Food_List.Rows.Count - 1; j++)
                     {
-                        string Item_Name = gv_Food_List.Rows[j].Cells[1].Value.ToString().Trim();
-                        string Item_Quantity = gv_Food_List.Rows[j].Cells[2].Value.ToString().Trim();
-                        string Item_Price = gv_Food_List.Rows[j].Cells[3].Value.ToString().Trim();
+                        string Item_Name = Convert.ToString(gv_Food_List.Rows[j].Cells[1].Value).Trim();
+                        string Item_Quantity = Convert.ToString(gv_Food_List.Rows[j].Cells[2].Value).Trim();
+                        string Item_Price = Convert.ToString(gv_Food_List.Rows[j].Cells[3].Value).Trim();
                         SqlCommand cmd_Insert = new SqlCommand();
                         cmd_Insert.Connection = con;
                         cmd_Insert.CommandType = CommandType.StoredProcedure;
                         cmd_Insert.CommandText = "usp_insert_Food_Bill";
+                        cmd_Insert.Parameters.AddWithValue("@BillNo", Convert.ToInt32(Bill_id));
                         cmd_Insert.Parameters.AddWithValue("@Item_Name", Item_Name);
                         cmd_Insert.Parameters.AddWithValue("@Item_Quantity", Convert.ToInt32(Item_Quantity));
                         cmd_Insert.Parameters.AddWithValue("@Item_Price", Convert.ToInt32(Item_Price));
                         cmd_Insert.Parameters.AddWithValue("@Date_Time", DateTime.Now);
-                        cmd_Insert.Parameters.AddWithValue("@Bill_Id", Convert.ToInt32(Bill_id));
                         cmd_Insert.ExecuteNonQuery();
                     }
                 }
-
                 Bill_Invoice crystal_report = new Bill_Invoice();
-
                 //crystal_report.SetParameterValue("Text4", 1);
-                
                 string sql = "select * from Total_Food_Billing where Bill_Id='" + Bill_id + "'";
                 SqlCommand cmd = new SqlCommand(sql, con);
                 SqlDataAdapter adp = new SqlDataAdapter(cmd);
@@ -354,11 +357,11 @@ namespace Billing_Software
             {
                 try
                 {
-                    string Item_name = gv_Food_List.Rows[i].Cells[1].Value.ToString().Trim();
-                    var arg = new DataGridViewCellEventArgs(4,0);
+                    string Item_name = Convert.ToString(gv_Food_List.Rows[i].Cells[1].Value);
+                    var arg = new DataGridViewCellEventArgs(4, 0);
                     gv_Food_List.Rows[i].Cells[0].Value = count;
                     count++;
-                    string Item_quantity = gv_Food_List.Rows[i].Cells[2].Value.ToString().Trim();
+                    string Item_quantity = Convert.ToString(gv_Food_List.Rows[i].Cells[2].Value);
                     con.Open();
                     string sql_Item_price = "select Item_Price from Food_Item_List where Item_Name='" + Item_name + "'";
                     SqlCommand cmd_price = new SqlCommand(sql_Item_price, con);
@@ -369,36 +372,30 @@ namespace Billing_Software
                     if (dt_price.Rows.Count > 0)
                     {
                         string Item_price = cmd_price.ExecuteScalar().ToString().Trim();
-                        
                         Total_price = Convert.ToInt32(Item_quantity) * Convert.ToInt32(Item_price);
                         gv_Food_List.Rows[i].Cells[3].Value = Total_price;
-
                         cal = cal + Total_price;
                     }
                     else
                     {
-                        if(gv_Food_List.Rows[i].Cells[3].Value.ToString().Trim() != "")
+                        if (Convert.ToString(gv_Food_List.Rows[i].Cells[3].Value) != "")
                         {
                             Total_price = Convert.ToInt32(gv_Food_List.Rows[i].Cells[3].Value);
                             cal = cal + Total_price;
                         }
                     }
-                    
                 }
-                catch(Exception ex)
+                catch (Exception)
                 {
 
                 }
-                
-                
                 txt_Billamount.Text = cal.ToString().Trim();
                 int Total = Convert.ToInt32(txt_Billamount.Text);
                 double GST = (double)18 / 100;
                 double GST1 = (GST * Total) / 2;
-
-                txt_Cgst.Text= Convert.ToString(GST1);
-                txt_sgst.Text= Convert.ToString(GST1);
-                txt_Total.Text = Convert.ToString(Total+ (GST1*2));
+                txt_Cgst.Text = Convert.ToString(GST1);
+                txt_sgst.Text = Convert.ToString(GST1);
+                txt_Total.Text = Convert.ToString(Total + (GST1 * 2));
                 con.Close();
             }
         }
@@ -455,7 +452,6 @@ namespace Billing_Software
                 SendKeys.Send("{right}");
             }
         }
-
         public void addItems(AutoCompleteStringCollection col)
         {
 
@@ -467,54 +463,42 @@ namespace Billing_Software
                 DataGridViewRow row_index = gv_Food_List.Rows[e.RowIndex];
                 if (gv_Food_List.Rows.Count > 1)
                 {
-                    
                     int row= gv_Food_List.CurrentCell.RowIndex;
-                    if(row < gv_Food_List.Rows.Count)
+                    if(row < gv_Food_List.Rows.Count-1)
                     {
                         gv_Food_List.Rows.RemoveAt(row);
                         gv_Food_List.CurrentCell = gv_Food_List.Rows[row].Cells[1];
                         gv_Food_List.CurrentCell.Selected = true;
-
+                        //con.Open();
+                        //string bill_id = Convert.ToString(row_index.Cells[0].Value).Trim();
+                        //string Item_Price = Convert.ToString(row_index.Cells[3].Value).Trim();
+                        //string sql_Delete = "delete from Food_Item_Bill where Bill_Id='" + bill_id + "'";
+                        //SqlCommand cmd = new SqlCommand(sql_Delete, con);
+                        //cmd.ExecuteNonQuery();
+                        //con.Close();
+                        //Gridview();
+                        //int Total_value = int.Parse(txt_Billamount.Text.Trim());
+                        //int value = Total_value - int.Parse(Item_Price);
+                        //txt_Billamount.Text = value.ToString().Trim();
+                        //double GST = (double)18 / 100;
+                        //double GST1 = (GST * value) / 2;
+                        //txt_Cgst.Text = GST1.ToString("00.00").Trim();
+                        //txt_sgst.Text = GST1.ToString("00.00").Trim();
+                        //double add_double_value = GST1 + GST1;
+                        //int Total_Amount1 = value + Convert.ToInt32(add_double_value);
+                        //txt_Total.Text = Convert.ToString(Total_Amount1).Trim();
                     }
                     else
                     {
                         MessageBox.Show("You cannot delete this row");
-                        gv_Food_List.Rows.Clear();
-                        gv_Food_List.Focus();
-                        gv_Food_List.CurrentCell = gv_Food_List.Rows[0].Cells[1];
-                        gv_Food_List.CurrentCell.Selected = true;
                     }
-                    //con.Open();
-                    //string bill_id = row_index.Cells["Item_Id"].Value.ToString().Trim();
-                    //string Item_Price = row_index.Cells["Total"].Value.ToString().Trim();
-                    //string sql_Delete = "delete from Food_Item_Bill where Bill_Id='" + bill_id + "'";
-                    //SqlCommand cmd = new SqlCommand(sql_Delete, con);
-                    //cmd.ExecuteNonQuery();
-                    //con.Close();
-                    //Gridview();
-                    //int Total_value = int.Parse(txt_Billamount.Text.Trim());
-                    //int value = Total_value - int.Parse(Item_Price);
-                    //txt_Billamount.Text = value.ToString().Trim();
-                    //double GST = (double)18 / 100;
-                    //double GST1 = (GST * value) / 2;
-                    //txt_Cgst.Text = GST1.ToString("00.00").Trim();
-                    //txt_sgst.Text = GST1.ToString("00.00").Trim();
-                    //double add_double_value = GST1 + GST1;
-                    //int Total_Amount1 = value + Convert.ToInt32(add_double_value);
-                    //txt_Total.Text = Total_Amount1.ToString().Trim();
-                }
+                 }
                 else
                 {
                     MessageBox.Show("Please Add the Item");
                 }
 
             }
-            
-           
-
-
         }
-
-        
     }
 }

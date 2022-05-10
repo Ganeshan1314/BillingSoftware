@@ -93,6 +93,26 @@ namespace Billing_Software.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap boxed_water_is_better_ivfdGY8C_rw_unsplash {
+            get {
+                object obj = ResourceManager.GetObject("boxed-water-is-better-ivfdGY8C_rw-unsplash", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap compressjpgboxed_water_is_better_ivfdGY8C_rw_unsplash_11zon__1__compress1 {
+            get {
+                object obj = ResourceManager.GetObject("compressjpgboxed_water_is_better_ivfdGY8C_rw_unsplash_11zon__1_-compress1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cool_geometric_triangular_figure_neon_laser_light_great_backgrounds_wallpapers_181624_9331_Easy_Resize_com {
             get {
                 object obj = ResourceManager.GetObject("cool-geometric-triangular-figure-neon-laser-light-great-backgrounds-wallpapers_18" +
@@ -157,6 +177,56 @@ namespace Billing_Software.Properties {
         internal static System.Drawing.Bitmap images1 {
             get {
                 object obj = ResourceManager.GetObject("images1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap imgonline_com_ua_resize_0y4qGmcQ1Ks {
+            get {
+                object obj = ResourceManager.GetObject("imgonline-com-ua-resize-0y4qGmcQ1Ks", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap imgonline_com_ua_resize_GHWId1WbMG1 {
+            get {
+                object obj = ResourceManager.GetObject("imgonline-com-ua-resize-GHWId1WbMG1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap imgonline_com_ua_resize_KpmRFpZO3P {
+            get {
+                object obj = ResourceManager.GetObject("imgonline-com-ua-resize-KpmRFpZO3P", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap imgonline_com_ua_resize_YIkOvFoern {
+            get {
+                object obj = ResourceManager.GetObject("imgonline-com-ua-resize-YIkOvFoern", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap istockphoto_472899538_170667a {
+            get {
+                object obj = ResourceManager.GetObject("istockphoto-472899538-170667a", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
