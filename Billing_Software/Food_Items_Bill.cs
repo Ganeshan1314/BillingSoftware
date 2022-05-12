@@ -18,6 +18,12 @@ namespace Billing_Software
     public partial class Food_Items_Bill : MasterForm
     {
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
+        SqlConnection DapperCon;
+        public SqlConnection Connection()
+        {
+            DapperCon = new SqlConnection(ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString);
+            return DapperCon;
+        }
         public Food_Items_Bill()
         {
             InitializeComponent();
@@ -129,8 +135,21 @@ namespace Billing_Software
         {
             try
             {
-                Random random = new Random();
-                int RandomNumber = random.Next(10);
+                string Item_Name = Convert.ToString(gv_Food_List.Rows[j].Cells[1].Value).Trim();
+                string Item_Quantity = Convert.ToString(gv_Food_List.Rows[j].Cells[2].Value).Trim();
+                string Item_Price = Convert.ToString(gv_Food_List.Rows[j].Cells[3].Value).Trim();
+                using (DapperCon=Connection())
+                {
+                    DapperCon.Open();
+                    var ParameterSelectMaxID = new DynamicParameters();
+                    ParameterSelectMaxID.Add("@BillDate", DateTime.Today);
+                    var ReaderMaxID = con.QuerySingle("SelectBillID", ParameterSelectMaxID,commandType:CommandType.StoredProcedure);
+                    Guid BillID = Guid.NewGuid();
+                    DateTime BillDate = DateTime.Today;
+                    
+                }
+                DateTime TodayDate = DateTime.Today;
+
                 con.Open();
                 int Bill_id = 0;
                 if (gv_Food_List.Rows.Count > 1)
@@ -156,9 +175,7 @@ namespace Billing_Software
                     con.Execute("insertBillMaster", ParameterBillMaster,commandType:CommandType.StoredProcedure);
                     for (int j = 0; j < gv_Food_List.Rows.Count - 1; j++)
                     {
-                        string Item_Name = Convert.ToString(gv_Food_List.Rows[j].Cells[1].Value).Trim();
-                        string Item_Quantity = Convert.ToString(gv_Food_List.Rows[j].Cells[2].Value).Trim();
-                        string Item_Price = Convert.ToString(gv_Food_List.Rows[j].Cells[3].Value).Trim();
+                        
                         SqlCommand cmd_Insert = new SqlCommand();
                         cmd_Insert.Connection = con;
                         cmd_Insert.CommandType = CommandType.StoredProcedure;
