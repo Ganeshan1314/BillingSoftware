@@ -135,21 +135,46 @@ namespace Billing_Software
         {
             try
             {
-                string Item_Name = Convert.ToString(gv_Food_List.Rows[j].Cells[1].Value).Trim();
-                string Item_Quantity = Convert.ToString(gv_Food_List.Rows[j].Cells[2].Value).Trim();
-                string Item_Price = Convert.ToString(gv_Food_List.Rows[j].Cells[3].Value).Trim();
+                char c = 'A';
+                int index = char.ToUpper(c) - 64;
+                string Item_Name = Convert.ToString(gv_Food_List.Rows[0].Cells[1].Value).Trim();
+                string Item_Quantity = Convert.ToString(gv_Food_List.Rows[0].Cells[2].Value).Trim();
+                string Item_Price = Convert.ToString(gv_Food_List.Rows[0].Cells[3].Value).Trim();
+                string BillSeries = string.Empty;
+                string CustomerBillID = string.Empty;
                 using (DapperCon=Connection())
                 {
                     DapperCon.Open();
                     var ParameterSelectMaxID = new DynamicParameters();
                     ParameterSelectMaxID.Add("@BillDate", DateTime.Today);
-                    var ReaderMaxID = con.QuerySingle("SelectBillID", ParameterSelectMaxID,commandType:CommandType.StoredProcedure);
+                    var ReaderMaxID = con.ExecuteReader("SelectBillID", ParameterSelectMaxID,commandType:CommandType.StoredProcedure);
+                    DataTable dtBillCount = new DataTable();
+                    dtBillCount.Load(ReaderMaxID);
+                    string value = Convert.ToString(dtBillCount.Rows[0]["BillIDCount"]);
+                    int id = 0;
+                    if (value != "")
+                    {
+                        id = Convert.ToInt32(value);
+                        id = id + 1;
+                    }
+                    else
+                    {
+                        id = 0;
+                        id = id + 1;
+                    }
+                    if(id < 1000)
+                    {
+                        BillSeries = "A";
+                        CustomerBillID = "A"+id;
+                    }
+                    else
+                    {
+
+                    }
                     Guid BillID = Guid.NewGuid();
                     DateTime BillDate = DateTime.Today;
                     
                 }
-                DateTime TodayDate = DateTime.Today;
-
                 con.Open();
                 int Bill_id = 0;
                 if (gv_Food_List.Rows.Count > 1)
