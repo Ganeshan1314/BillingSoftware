@@ -140,7 +140,7 @@ namespace Billing_Software
                 string Item_Name = Convert.ToString(gv_Food_List.Rows[0].Cells[1].Value).Trim();
                 string Item_Quantity = Convert.ToString(gv_Food_List.Rows[0].Cells[2].Value).Trim();
                 string Item_Price = Convert.ToString(gv_Food_List.Rows[0].Cells[3].Value).Trim();
-                string BillSeries = string.Empty;
+                int BillSeries = 0;
                 string CustomerBillID = string.Empty;
                 using (DapperCon=Connection())
                 {
@@ -164,12 +164,13 @@ namespace Billing_Software
                     }
                     if(id < 1000)
                     {
-                        BillSeries = "A";
+                        BillSeries = 64;
                         CustomerBillID = "A"+id;
                     }
                     else
                     {
-
+                        var MaxBillID = con.QuerySingle("SelectMaxBillIDSeries", commandType:CommandType.StoredProcedure);
+                        int BillID1 = MaxBillID.BillIDSeries;
                     }
                     Guid BillID = Guid.NewGuid();
                     DateTime BillDate = DateTime.Today;
