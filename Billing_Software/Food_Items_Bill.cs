@@ -169,12 +169,28 @@ namespace Billing_Software
                     }
                     else
                     {
-                        var MaxBillID = con.QuerySingle("SelectMaxBillIDSeries", commandType:CommandType.StoredProcedure);
-                        int BillID1 = MaxBillID.BillIDSeries;
+                        var MaxBillIDSeries = con.QuerySingle("SelectMaxBillIDSeries", commandType:CommandType.StoredProcedure);
+                        BillSeries = MaxBillIDSeries.BillIDSeries;
+                        BillSeries = BillSeries + 1;
+                        CustomerBillID = BillSeries +Convert.ToString(id);
                     }
                     Guid BillID = Guid.NewGuid();
                     DateTime BillDate = DateTime.Today;
-                    
+                    var ReaderBillIDCount = con.QuerySingle("SelectMaxTodayBillIDCount",commandType:CommandType.StoredProcedure);
+                    int MaxBillIDCount = ReaderBillIDCount.BillIDCountToday;
+                    var ParameterTotalFoodBilling = new DynamicParameters();
+                    ParameterTotalFoodBilling.Add("@Bill_Id", BillID);
+                    ParameterTotalFoodBilling.Add("@CustomerBillID", CustomerBillID);
+                    ParameterTotalFoodBilling.Add("@BillIDSeries", BillSeries);
+                    ParameterTotalFoodBilling.Add("@BillIDCount", MaxBillIDCount);
+                    ParameterTotalFoodBilling.Add("@Item_name", Item_Name);
+                    ParameterTotalFoodBilling.Add("@Quantity", Item_Quantity);
+                    ParameterTotalFoodBilling.Add("@Quality","1");
+                    ParameterTotalFoodBilling.Add("@Price", Item_Price);
+                    ParameterTotalFoodBilling.Add("@BillDate",DateTime.Today);
+                    ParameterTotalFoodBilling.Add("@CreatedDate",DateTime.Now);
+                    ParameterTotalFoodBilling.Add("@CreatedBy","Ganeshan");
+                    con.Execute("InsertTotalFoodBilling", ParameterTotalFoodBilling,commandType:CommandType.StoredProcedure);
                 }
                 con.Open();
                 int Bill_id = 0;
@@ -221,7 +237,6 @@ namespace Billing_Software
                 SqlDataAdapter adp = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 adp.Fill(dt);
-
                 TextObject text_Date = (TextObject)crystal_report.ReportDefinition.Sections["Section1"].ReportObjects["Date"];
                 text_Date.Text = DateTime.Now.ToString("dd/MMM/yyyy HH:mm tt");
                 crystal_report.SetDataSource(dt);
