@@ -228,6 +228,7 @@
     <Compile Include="ApprovalList.Designer.cs">
       <DependentUpon>ApprovalList.cs</DependentUpon>
     </Compile>
+    <Compile Include="SessionValue.cs" />
     <EmbeddedResource Include="Add_Food_Item.resx">
       <DependentUpon>Add_Food_Item.cs</DependentUpon>
     </EmbeddedResource>

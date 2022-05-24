@@ -15,7 +15,7 @@ namespace Billing_Software
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Food_Items_Bill());
+            Application.Run(new Login());
         }
     }
 }

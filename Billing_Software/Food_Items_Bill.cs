@@ -137,8 +137,12 @@ namespace Billing_Software
             {
                 char c = 'A';
                 int index = char.ToUpper(c) - 64;
+                for(int i=0;i<gv_Food_List.Rows.Count;i++)
+                {
+
+                }
                 string Item_Name = Convert.ToString(gv_Food_List.Rows[0].Cells[1].Value).Trim();
-                string Item_Quantity = Convert.ToString(gv_Food_List.Rows[0].Cells[2].Value).Trim();
+                string Item_Quantity = Convert.ToString(gv_Food_List.Rows[0].Cells[2].Value).Trim(); 
                 string Item_Price = Convert.ToString(gv_Food_List.Rows[0].Cells[3].Value).Trim();
                 int BillSeries = 0;
                 string CustomerBillID = string.Empty;
@@ -169,15 +173,42 @@ namespace Billing_Software
                     }
                     else
                     {
+                        var ParameterMaxBillIDSeries = new DynamicParameters();
+                        ParameterMaxBillIDSeries.Add("@Date", DateTime.Today);
                         var MaxBillIDSeries = con.QuerySingle("SelectMaxBillIDSeries", commandType:CommandType.StoredProcedure);
                         BillSeries = MaxBillIDSeries.BillIDSeries;
-                        BillSeries = BillSeries + 1;
+                        var ParameterCountBillIDSeries = new DynamicParameters();
+                        ParameterCountBillIDSeries.Add("@BillSeries", BillSeries);
+                        var ReaderCountBillIDSeries = con.ExecuteReader("CountBillIDSeries", ParameterCountBillIDSeries,commandType:CommandType.StoredProcedure);
+                        DataTable DtCountBillIDSeries = new DataTable();
+                        DtCountBillIDSeries.Load(ReaderCountBillIDSeries);
+                        int CountBillIDSeries = 0;
+                        if (DtCountBillIDSeries.Rows.Count > 0)
+                        {
+                            CountBillIDSeries = Convert.ToInt32(DtCountBillIDSeries.Rows[0]["BillIDCountToday"]);
+                        }
+                        if (CountBillIDSeries >= 1000)
+                        {
+                            BillSeries = BillSeries + 1;
+                        }
                         CustomerBillID = BillSeries +Convert.ToString(id);
                     }
                     Guid BillID = Guid.NewGuid();
                     DateTime BillDate = DateTime.Today;
-                    var ReaderBillIDCount = con.QuerySingle("SelectMaxTodayBillIDCount",commandType:CommandType.StoredProcedure);
-                    int MaxBillIDCount = ReaderBillIDCount.BillIDCountToday;
+                    var ParameterMaxTodayBillIDCount = new DynamicParameters();
+                    ParameterMaxTodayBillIDCount.Add("@BillDate", BillDate);
+                    var ReaderBillIDCount = con.ExecuteReader("SelectMaxTodayBillIDCount",ParameterMaxTodayBillIDCount, commandType:CommandType.StoredProcedure);
+                    int MaxBillIDCount = 0;
+                    DataTable DtBillIDCount = new DataTable();
+                    DtBillIDCount.Load(ReaderBillIDCount);
+                    if(DtBillIDCount.Rows.Count>0)
+                    {
+                        string BillIDCount = Convert.ToString(DtBillIDCount.Rows[0]["BillIDCountToday"]);
+                        if(BillIDCount != "")
+                        {
+                            MaxBillIDCount = Convert.ToInt32(DtBillIDCount.Rows[0]["BillIDCountToday"]);
+                        }
+                    }
                     var ParameterTotalFoodBilling = new DynamicParameters();
                     ParameterTotalFoodBilling.Add("@Bill_Id", BillID);
                     ParameterTotalFoodBilling.Add("@CustomerBillID", CustomerBillID);
@@ -189,68 +220,68 @@ namespace Billing_Software
                     ParameterTotalFoodBilling.Add("@Price", Item_Price);
                     ParameterTotalFoodBilling.Add("@BillDate",DateTime.Today);
                     ParameterTotalFoodBilling.Add("@CreatedDate",DateTime.Now);
-                    ParameterTotalFoodBilling.Add("@CreatedBy","Ganeshan");
+                    ParameterTotalFoodBilling.Add("@CreatedBy",new Guid(SessionValue.UniqueEmpID));
                     con.Execute("InsertTotalFoodBilling", ParameterTotalFoodBilling,commandType:CommandType.StoredProcedure);
                 }
-                con.Open();
-                int Bill_id = 0;
-                if (gv_Food_List.Rows.Count > 1)
-                {
-                    SqlCommand cmd_Max_Id = new SqlCommand();
-                    cmd_Max_Id.Connection = con;
-                    cmd_Max_Id.CommandType = CommandType.StoredProcedure;
-                    cmd_Max_Id.CommandText = "usp_Max_Bill_id";
-                    string Max_Id = Convert.ToString(cmd_Max_Id.ExecuteScalar()).Trim();
-                    if(Max_Id != "")
-                    {
-                        Bill_id = Convert.ToInt32(Max_Id)+1;
-                    }
-                    else
-                    {
-                        Bill_id = 1;
-                    }
-                    Guid Bill_Id = Guid.NewGuid();
-                    var ParameterBillMaster = new DynamicParameters();
-                    ParameterBillMaster.Add("@Bill_Id", Bill_Id);
-                    ParameterBillMaster.Add("@CreatedBy","Admin");
-                    ParameterBillMaster.Add("@CreatedDate",DateTime.Now);
-                    con.Execute("insertBillMaster", ParameterBillMaster,commandType:CommandType.StoredProcedure);
-                    for (int j = 0; j < gv_Food_List.Rows.Count - 1; j++)
-                    {
+                //con.Open();
+                //int Bill_id = 0;
+                //if (gv_Food_List.Rows.Count > 1)
+                //{
+                //    SqlCommand cmd_Max_Id = new SqlCommand();
+                //    cmd_Max_Id.Connection = con;
+                //    cmd_Max_Id.CommandType = CommandType.StoredProcedure;
+                //    cmd_Max_Id.CommandText = "usp_Max_Bill_id";
+                //    string Max_Id = Convert.ToString(cmd_Max_Id.ExecuteScalar()).Trim();
+                //    if(Max_Id != "")
+                //    {
+                //        Bill_id = Convert.ToInt32(Max_Id)+1;
+                //    }
+                //    else
+                //    {
+                //        Bill_id = 1;
+                //    }
+                //    Guid Bill_Id = Guid.NewGuid();
+                //    var ParameterBillMaster = new DynamicParameters();
+                //    ParameterBillMaster.Add("@Bill_Id", Bill_Id);
+                //    ParameterBillMaster.Add("@CreatedBy","Admin");
+                //    ParameterBillMaster.Add("@CreatedDate",DateTime.Now);
+                //    con.Execute("insertBillMaster", ParameterBillMaster,commandType:CommandType.StoredProcedure);
+                //    for (int j = 0; j < gv_Food_List.Rows.Count - 1; j++)
+                //    {
                         
-                        SqlCommand cmd_Insert = new SqlCommand();
-                        cmd_Insert.Connection = con;
-                        cmd_Insert.CommandType = CommandType.StoredProcedure;
-                        cmd_Insert.CommandText = "usp_insert_Food_Bill";
-                        cmd_Insert.Parameters.AddWithValue("@BillNo", Convert.ToInt32(Bill_id));
-                        cmd_Insert.Parameters.AddWithValue("@Item_Name", Item_Name);
-                        cmd_Insert.Parameters.AddWithValue("@Item_Quantity", Convert.ToInt32(Item_Quantity));
-                        cmd_Insert.Parameters.AddWithValue("@Item_Price", Convert.ToInt32(Item_Price));
-                        cmd_Insert.Parameters.AddWithValue("@Date_Time", DateTime.Now);
-                        cmd_Insert.ExecuteNonQuery();
-                    }
-                }
-                Bill_Invoice crystal_report = new Bill_Invoice();
-                //crystal_report.SetParameterValue("Text4", 1);
-                string sql = "select * from Total_Food_Billing where Bill_Id='" + Bill_id + "'";
-                SqlCommand cmd = new SqlCommand(sql, con);
-                SqlDataAdapter adp = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                adp.Fill(dt);
-                TextObject text_Date = (TextObject)crystal_report.ReportDefinition.Sections["Section1"].ReportObjects["Date"];
-                text_Date.Text = DateTime.Now.ToString("dd/MMM/yyyy HH:mm tt");
-                crystal_report.SetDataSource(dt);
-                crystalReportViewer2.ReportSource = crystal_report;
-                crystal_report.PrintToPrinter(1, false, 0, 0);
-                gv_Food_List.Rows.Clear();
-                con.Close();
-                txt_Billamount.Text = "";
-                txt_Cgst.Text = "";
-                txt_sgst.Text = "";
-                txt_Total.Text = "";
-                gv_Food_List.Focus();
-                gv_Food_List.CurrentCell = gv_Food_List.Rows[0].Cells[1];
-                gv_Food_List.CurrentCell.Selected = true;
+                //        SqlCommand cmd_Insert = new SqlCommand();
+                //        cmd_Insert.Connection = con;
+                //        cmd_Insert.CommandType = CommandType.StoredProcedure;
+                //        cmd_Insert.CommandText = "usp_insert_Food_Bill";
+                //        cmd_Insert.Parameters.AddWithValue("@BillNo", Convert.ToInt32(Bill_id));
+                //        cmd_Insert.Parameters.AddWithValue("@Item_Name", Item_Name);
+                //        cmd_Insert.Parameters.AddWithValue("@Item_Quantity", Convert.ToInt32(Item_Quantity));
+                //        cmd_Insert.Parameters.AddWithValue("@Item_Price", Convert.ToInt32(Item_Price));
+                //        cmd_Insert.Parameters.AddWithValue("@Date_Time", DateTime.Now);
+                //        cmd_Insert.ExecuteNonQuery();
+                //    }
+                //}
+                //Bill_Invoice crystal_report = new Bill_Invoice();
+                ////crystal_report.SetParameterValue("Text4", 1);
+                //string sql = "select * from Total_Food_Billing where Bill_Id='" + Bill_id + "'";
+                //SqlCommand cmd = new SqlCommand(sql, con);
+                //SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                //DataTable dt = new DataTable();
+                //adp.Fill(dt);
+                //TextObject text_Date = (TextObject)crystal_report.ReportDefinition.Sections["Section1"].ReportObjects["Date"];
+                //text_Date.Text = DateTime.Now.ToString("dd/MMM/yyyy HH:mm tt");
+                //crystal_report.SetDataSource(dt);
+                //crystalReportViewer2.ReportSource = crystal_report;
+                //crystal_report.PrintToPrinter(1, false, 0, 0);
+                //gv_Food_List.Rows.Clear();
+                //con.Close();
+                //txt_Billamount.Text = "";
+                //txt_Cgst.Text = "";
+                //txt_sgst.Text = "";
+                //txt_Total.Text = "";
+                //gv_Food_List.Focus();
+                //gv_Food_List.CurrentCell = gv_Food_List.Rows[0].Cells[1];
+                //gv_Food_List.CurrentCell.Selected = true;
 
                 //string sql_Get_current_list = "select * from Food_Item_Bill";
                 //SqlCommand cmd_get_list = new SqlCommand(sql_Get_current_list, con);

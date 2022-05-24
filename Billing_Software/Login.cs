@@ -42,8 +42,11 @@ namespace Billing_Software
                 if(StatusID == 2)
                 {
                     this.Hide();
+                    SessionValue.UniqueEmpID = dt.Rows[0]["UniqueEmpID"].ToString().Trim();
+                    string value = SessionValue.UniqueEmpID;
                     Dashboard Dashboard = new Dashboard();
                     Dashboard.Show();
+                    
                 }
             }
             else

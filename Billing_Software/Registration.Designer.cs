@@ -262,7 +262,7 @@
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "Registration";
-            this.Text = "Registration";
+            this.Text = " ";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Controls.SetChildIndex(this.label1, 0);
             this.Controls.SetChildIndex(this.label3, 0);
