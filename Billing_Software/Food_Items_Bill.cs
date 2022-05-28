@@ -135,23 +135,20 @@ namespace Billing_Software
         {
             try
             {
+                string Item_Name = string.Empty;
+                string Item_Quantity = string.Empty;
+                string Item_Price = string.Empty;
                 char c = 'A';
                 int index = char.ToUpper(c) - 64;
-                for(int i=0;i<gv_Food_List.Rows.Count;i++)
-                {
-
-                }
-                string Item_Name = Convert.ToString(gv_Food_List.Rows[0].Cells[1].Value).Trim();
-                string Item_Quantity = Convert.ToString(gv_Food_List.Rows[0].Cells[2].Value).Trim(); 
-                string Item_Price = Convert.ToString(gv_Food_List.Rows[0].Cells[3].Value).Trim();
-                int BillSeries = 0;
                 string CustomerBillID = string.Empty;
-                using (DapperCon=Connection())
+                int BillSeries = 0;
+                int MaxBillIDCount = 1;
+                using (DapperCon = Connection())
                 {
                     DapperCon.Open();
                     var ParameterSelectMaxID = new DynamicParameters();
                     ParameterSelectMaxID.Add("@BillDate", DateTime.Today);
-                    var ReaderMaxID = con.ExecuteReader("SelectBillID", ParameterSelectMaxID,commandType:CommandType.StoredProcedure);
+                    var ReaderMaxID = con.ExecuteReader("SelectBillID", ParameterSelectMaxID, commandType: CommandType.StoredProcedure);
                     DataTable dtBillCount = new DataTable();
                     dtBillCount.Load(ReaderMaxID);
                     string value = Convert.ToString(dtBillCount.Rows[0]["BillIDCount"]);
@@ -166,63 +163,76 @@ namespace Billing_Software
                         id = 0;
                         id = id + 1;
                     }
-                    if(id < 1000)
+                    if (id < 1)
                     {
                         BillSeries = 64;
-                        CustomerBillID = "A"+id;
+                        CustomerBillID = "A" + id;
                     }
                     else
                     {
                         var ParameterMaxBillIDSeries = new DynamicParameters();
                         ParameterMaxBillIDSeries.Add("@Date", DateTime.Today);
-                        var MaxBillIDSeries = con.QuerySingle("SelectMaxBillIDSeries", commandType:CommandType.StoredProcedure);
+                        var MaxBillIDSeries = con.QuerySingle("SelectMaxBillIDSeries", commandType: CommandType.StoredProcedure);
                         BillSeries = MaxBillIDSeries.BillIDSeries;
                         var ParameterCountBillIDSeries = new DynamicParameters();
                         ParameterCountBillIDSeries.Add("@BillSeries", BillSeries);
-                        var ReaderCountBillIDSeries = con.ExecuteReader("CountBillIDSeries", ParameterCountBillIDSeries,commandType:CommandType.StoredProcedure);
+                        ParameterCountBillIDSeries.Add("@BillDate", DateTime.Today);
+                        var ReaderCountBillIDSeries = con.ExecuteReader("CountBillIDSeries", ParameterCountBillIDSeries, commandType: CommandType.StoredProcedure);
                         DataTable DtCountBillIDSeries = new DataTable();
                         DtCountBillIDSeries.Load(ReaderCountBillIDSeries);
                         int CountBillIDSeries = 0;
                         if (DtCountBillIDSeries.Rows.Count > 0)
                         {
-                            CountBillIDSeries = Convert.ToInt32(DtCountBillIDSeries.Rows[0]["BillIDCountToday"]);
+                            CountBillIDSeries = Convert.ToInt32(DtCountBillIDSeries.Rows[0]["CountBillIDSeries"]);
                         }
-                        if (CountBillIDSeries >= 1000)
+                        if (CountBillIDSeries >= 1)
                         {
                             BillSeries = BillSeries + 1;
                         }
-                        CustomerBillID = BillSeries +Convert.ToString(id);
+                        char cq = char.Parse("12");
+                        //CustomerBillID = (char)char.Parse(BillSeries.ToString().Trim()) +"" +Convert.ToString(id);
                     }
-                    Guid BillID = Guid.NewGuid();
-                    DateTime BillDate = DateTime.Today;
                     var ParameterMaxTodayBillIDCount = new DynamicParameters();
-                    ParameterMaxTodayBillIDCount.Add("@BillDate", BillDate);
-                    var ReaderBillIDCount = con.ExecuteReader("SelectMaxTodayBillIDCount",ParameterMaxTodayBillIDCount, commandType:CommandType.StoredProcedure);
-                    int MaxBillIDCount = 0;
+                    ParameterMaxTodayBillIDCount.Add("@BillDate", DateTime.Today);
+                    var ReaderBillIDCount = DapperCon.ExecuteReader("SelectMaxTodayBillIDCount", ParameterMaxTodayBillIDCount, commandType: CommandType.StoredProcedure);
                     DataTable DtBillIDCount = new DataTable();
                     DtBillIDCount.Load(ReaderBillIDCount);
-                    if(DtBillIDCount.Rows.Count>0)
+                    if (DtBillIDCount.Rows.Count > 0)
                     {
                         string BillIDCount = Convert.ToString(DtBillIDCount.Rows[0]["BillIDCountToday"]);
-                        if(BillIDCount != "")
+                        if (BillIDCount != "")
                         {
-                            MaxBillIDCount = Convert.ToInt32(DtBillIDCount.Rows[0]["BillIDCountToday"]);
+                            MaxBillIDCount = Convert.ToInt32(DtBillIDCount.Rows[0]["BillIDCountToday"]) + 1;
                         }
                     }
-                    var ParameterTotalFoodBilling = new DynamicParameters();
-                    ParameterTotalFoodBilling.Add("@Bill_Id", BillID);
-                    ParameterTotalFoodBilling.Add("@CustomerBillID", CustomerBillID);
-                    ParameterTotalFoodBilling.Add("@BillIDSeries", BillSeries);
-                    ParameterTotalFoodBilling.Add("@BillIDCount", MaxBillIDCount);
-                    ParameterTotalFoodBilling.Add("@Item_name", Item_Name);
-                    ParameterTotalFoodBilling.Add("@Quantity", Item_Quantity);
-                    ParameterTotalFoodBilling.Add("@Quality","1");
-                    ParameterTotalFoodBilling.Add("@Price", Item_Price);
-                    ParameterTotalFoodBilling.Add("@BillDate",DateTime.Today);
-                    ParameterTotalFoodBilling.Add("@CreatedDate",DateTime.Now);
-                    ParameterTotalFoodBilling.Add("@CreatedBy",new Guid(SessionValue.UniqueEmpID));
-                    con.Execute("InsertTotalFoodBilling", ParameterTotalFoodBilling,commandType:CommandType.StoredProcedure);
                 }
+                for (int i=0;i<gv_Food_List.Rows.Count-1;i++)
+                {
+                    Item_Name = Convert.ToString(gv_Food_List.Rows[i].Cells[1].Value).Trim();
+                    Item_Quantity = Convert.ToString(gv_Food_List.Rows[i].Cells[2].Value).Trim();
+                    Item_Price = Convert.ToString(gv_Food_List.Rows[i].Cells[3].Value).Trim();
+                    using (DapperCon = Connection())
+                    {
+                        DapperCon.Open();
+                        Guid BillID = Guid.NewGuid();
+                        DateTime BillDate = DateTime.Today;
+                        var ParameterTotalFoodBilling = new DynamicParameters();
+                        ParameterTotalFoodBilling.Add("@Bill_Id", BillID);
+                        ParameterTotalFoodBilling.Add("@CustomerBillID", CustomerBillID);
+                        ParameterTotalFoodBilling.Add("@BillIDSeries", BillSeries);
+                        ParameterTotalFoodBilling.Add("@BillIDCount", MaxBillIDCount);
+                        ParameterTotalFoodBilling.Add("@Item_name", Item_Name);
+                        ParameterTotalFoodBilling.Add("@Quantity", Item_Quantity);
+                        ParameterTotalFoodBilling.Add("@Quality", "1");
+                        ParameterTotalFoodBilling.Add("@Price", Item_Price);
+                        ParameterTotalFoodBilling.Add("@BillDate", DateTime.Today);
+                        ParameterTotalFoodBilling.Add("@CreatedDate", DateTime.Now);
+                        ParameterTotalFoodBilling.Add("@CreatedBy", new Guid(SessionValue.UniqueEmpID));
+                        con.Execute("InsertTotalFoodBilling", ParameterTotalFoodBilling, commandType: CommandType.StoredProcedure);
+                    }
+                }
+                
+                
                 //con.Open();
                 //int Bill_id = 0;
                 //if (gv_Food_List.Rows.Count > 1)
