@@ -163,9 +163,9 @@ namespace Billing_Software
                         id = 0;
                         id = id + 1;
                     }
-                    if (id < 1)
+                    if (id == 1)
                     {
-                        BillSeries = 64;
+                        BillSeries = 65;
                         CustomerBillID = "A" + id;
                     }
                     else
@@ -185,12 +185,32 @@ namespace Billing_Software
                         {
                             CountBillIDSeries = Convert.ToInt32(DtCountBillIDSeries.Rows[0]["CountBillIDSeries"]);
                         }
-                        if (CountBillIDSeries >= 1)
+                        int Length = BillSeries.ToString().Length;
+                        if (Length == 2 && BillSeries >= 65 && BillSeries < 90 && CountBillIDSeries == 100000)
                         {
                             BillSeries = BillSeries + 1;
+                            CustomerBillID = ((char)BillSeries).ToString()+ "1";
                         }
-                        char cq = char.Parse("12");
-                        //CustomerBillID = (char)char.Parse(BillSeries.ToString().Trim()) +"" +Convert.ToString(id);
+                        else if(BillSeries == 90)
+                        {
+                            BillSeries = 6565;
+                            CustomerBillID = "AA";
+                        }
+                        if (Length == 4 && CountBillIDSeries == 100000 && Convert.ToInt32(BillSeries.ToString().Substring(2)) < 90 )
+                        {
+                            BillSeries = BillSeries + 1;
+                            string SplitingValue =BillSeries.ToString().Substring(0, 2);
+                            int split = Convert.ToInt32(SplitingValue);
+                            CustomerBillID = ((char)split).ToString();
+                            SplitingValue = BillSeries.ToString().Substring(2);
+                            split = Convert.ToInt32(SplitingValue);
+                            CustomerBillID = CustomerBillID+ ((char)split).ToString()+ "1";
+                        }
+                        if (Length == 2 && BillSeries >= 65 && BillSeries < 90 && CountBillIDSeries < 100000)
+                        {
+                            CountBillIDSeries = CountBillIDSeries + 1;
+                            CustomerBillID = ((char)BillSeries).ToString() + CountBillIDSeries.ToString();
+                        }
                     }
                     var ParameterMaxTodayBillIDCount = new DynamicParameters();
                     ParameterMaxTodayBillIDCount.Add("@BillDate", DateTime.Today);
@@ -339,9 +359,6 @@ namespace Billing_Software
             {
 
             }
-
-
-
         }
         private void Gridview()
         {
