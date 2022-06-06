@@ -47,7 +47,6 @@ namespace Billing_Software
             {
                 mycollection.Add(dr.GetString(0));
             }
-
             txt_ItemId.AutoCompleteCustomSource = mycollection;
             //autoText.AutoCompleteMode = AutoCompleteMode.Suggest;
             //autoText.AutoCompleteSource = AutoCompleteSource.CustomSource;
@@ -251,8 +250,6 @@ namespace Billing_Software
                         con.Execute("InsertTotalFoodBilling", ParameterTotalFoodBilling, commandType: CommandType.StoredProcedure);
                     }
                 }
-                
-                
                 //con.Open();
                 //int Bill_id = 0;
                 //if (gv_Food_List.Rows.Count > 1)
@@ -380,7 +377,6 @@ namespace Billing_Software
         }
         private void gv_Food_List_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            
             if(gv_Food_List.Rows.Count == 1)
             {
                 MessageBox.Show("Please Add the items table!");
@@ -428,8 +424,6 @@ namespace Billing_Software
             TextBox autoText = e.Control as TextBox;
             if (colum_index == 1)
             {
-                
-                
                 while (dr.Read())
                 {
                     mycollection.Add(dr.GetString(0));
@@ -443,7 +437,6 @@ namespace Billing_Software
                 mycollection.Clear();
                 autoText.Text = "";
             }
-            
             if (title_quantity.Equals("Quantity"))
             {
                 int Row_count = gv_Food_List.Rows.Count;
@@ -479,7 +472,7 @@ namespace Billing_Software
                     count++;
                     string Item_quantity = Convert.ToString(gv_Food_List.Rows[i].Cells[2].Value);
                     con.Open();
-                    string sql_Item_price = "select Item_Price from Food_Item_List where Item_Name='" + Item_name + "'";
+                    string sql_Item_price = "select Item_Price from Food_Item_List where Item_Name=N'" + Item_name + "'";
                     SqlCommand cmd_price = new SqlCommand(sql_Item_price, con);
                     SqlDataAdapter adp_price = new SqlDataAdapter(cmd_price);
                     DataTable dt_price = new DataTable();
@@ -523,11 +516,15 @@ namespace Billing_Software
                 if (!int.TryParse(Convert.ToString(e.FormattedValue), out i))
                 {
                     e.Cancel = true;
-                    MessageBox.Show("Enter numbers only");
+                    if (Convert.ToString(e.FormattedValue) != "")
+                    {
+                        MessageBox.Show("Enter numbers only");
+                    }
                     int row = gv_Food_List.CurrentCell.RowIndex;
                     gv_Food_List.Rows[row].Cells[2].Value = 0;
                     gv_Food_List.Update();
                     gv_Food_List.Refresh();
+                    
                 }
             }
             if(e.ColumnIndex == 1)
@@ -544,7 +541,7 @@ namespace Billing_Software
             }
         }
         private void gv_Food_List_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
+        {   
             int row = gv_Food_List.CurrentCell.RowIndex;
             int col = gv_Food_List.CurrentCell.ColumnIndex;
             if (col == 1)
@@ -556,8 +553,6 @@ namespace Billing_Software
             {
                 gv_Food_List.CurrentCell = gv_Food_List[1, row+1];
                 gv_Food_List.Focus();
-
-
             }
         }
         private void gv_Food_List_KeyDown(object sender, KeyEventArgs e)
@@ -567,6 +562,15 @@ namespace Billing_Software
                 SendKeys.Send("{up}");
                 SendKeys.Send("{right}");
             }
+            if (e.KeyCode == Keys.Tab)
+            {
+                SendKeys.Send("{up}");
+                SendKeys.Send("{right}");
+            }
+            //if (e.KeyCode == Keys.Menu)
+            //{
+            //    SendKeys.Send("{left}");
+            //}
         }
         public void addItems(AutoCompleteStringCollection col)
         {

@@ -24,7 +24,8 @@ namespace Billing_Software
         private void button1_Click(object sender, EventArgs e)
         {
             con.Open();
-            string sql_Insert = "insert into Food_Item_List(Item_Name,Item_Price) values ('" + txt_Itemname.Text + "','" + txt_itemprice.Text + "')";
+            string sql_Insert = "insert into Food_Item_List(Item_Name,Item_Price) values (N'" + txt_Itemname.Text + "','" + txt_itemprice.Text + "')";
+            //string sql_Insert = "insert into Food_Item_List([Item_Name],[Item_Price]) values(N'அஆஅ', '1')";
             SqlCommand cmd = new SqlCommand(sql_Insert,con);
             cmd.ExecuteNonQuery();
             MessageBox.Show("Food Item Inserted Successfully");
