@@ -225,6 +225,19 @@ namespace Billing_Software
                         }
                     }
                 }
+                var ParameterUniqueBillID = new DynamicParameters();
+                Guid UniqueBillID = Guid.NewGuid();
+                ParameterUniqueBillID.Add("@UniqueBillID", UniqueBillID);
+                ParameterUniqueBillID.Add("@CustomerBillID", CustomerBillID);
+                ParameterUniqueBillID.Add("@BillIDSeries", BillSeries);
+                ParameterUniqueBillID.Add("@BillIDCount", MaxBillIDCount);
+                ParameterUniqueBillID.Add("@BillAmount", guidUniqueBillID);
+                ParameterUniqueBillID.Add("@CGST", guidUniqueBillID);
+                ParameterUniqueBillID.Add("@SGST", guidUniqueBillID);
+                ParameterUniqueBillID.Add("@TotalAmount", guidUniqueBillID);
+                ParameterUniqueBillID.Add("@BillDate", guidUniqueBillID);
+                ParameterUniqueBillID.Add("@CreatedBy", guidUniqueBillID);
+
                 for (int i=0;i<gv_Food_List.Rows.Count-1;i++)
                 {
                     Item_Name = Convert.ToString(gv_Food_List.Rows[i].Cells[1].Value).Trim();
