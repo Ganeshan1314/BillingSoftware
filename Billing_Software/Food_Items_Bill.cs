@@ -225,19 +225,19 @@ namespace Billing_Software
                         }
                     }
                 }
-                var ParameterUniqueBillID = new DynamicParameters();
+                var ParameterBillIDDetails = new DynamicParameters();
                 Guid UniqueBillID = Guid.NewGuid();
-                ParameterUniqueBillID.Add("@UniqueBillID", UniqueBillID);
-                ParameterUniqueBillID.Add("@CustomerBillID", CustomerBillID);
-                ParameterUniqueBillID.Add("@BillIDSeries", BillSeries);
-                ParameterUniqueBillID.Add("@BillIDCount", MaxBillIDCount);
-                ParameterUniqueBillID.Add("@BillAmount", guidUniqueBillID);
-                ParameterUniqueBillID.Add("@CGST", guidUniqueBillID);
-                ParameterUniqueBillID.Add("@SGST", guidUniqueBillID);
-                ParameterUniqueBillID.Add("@TotalAmount", guidUniqueBillID);
-                ParameterUniqueBillID.Add("@BillDate", guidUniqueBillID);
-                ParameterUniqueBillID.Add("@CreatedBy", guidUniqueBillID);
-
+                ParameterBillIDDetails.Add("@UniqueBillID", UniqueBillID);
+                ParameterBillIDDetails.Add("@CustomerBillID", CustomerBillID);
+                ParameterBillIDDetails.Add("@BillIDSeries", BillSeries);
+                ParameterBillIDDetails.Add("@BillIDCount", MaxBillIDCount);
+                ParameterBillIDDetails.Add("@CGST", txt_Cgst.Text.Trim());
+                ParameterBillIDDetails.Add("@SGST", txt_sgst.Text.ToString().Trim());
+                ParameterBillIDDetails.Add("@TotalAmount", txt_Total.Text.ToString().Trim());
+                ParameterBillIDDetails.Add("@BillDate", DateTime.Today);
+                ParameterBillIDDetails.Add("@CreatedDate", DateTime.Now);
+                ParameterBillIDDetails.Add("@CreatedBy", new Guid(SessionValue.UniqueEmpID));
+                con.Execute("insertBillIDDetails", ParameterBillIDDetails,commandType:CommandType.StoredProcedure);
                 for (int i=0;i<gv_Food_List.Rows.Count-1;i++)
                 {
                     Item_Name = Convert.ToString(gv_Food_List.Rows[i].Cells[1].Value).Trim();
