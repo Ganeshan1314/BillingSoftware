@@ -55,6 +55,7 @@ namespace Billing_Software
             //autoText.AutoCompleteCustomSource = DataCollection;
             //}
             con.Close();
+            txt_Total.Text = "0"; 
         }
         int Total_quntity, exit_quantity, Total_Amount;
         private void Add_Click(object sender, EventArgs e)
@@ -137,6 +138,8 @@ namespace Billing_Software
                 string Item_Name = string.Empty;
                 string Item_Quantity = string.Empty;
                 string Item_Price = string.Empty;
+                double CGST;
+                double SGST;
                 char c = 'A';
                 int index = char.ToUpper(c) - 64;
                 string CustomerBillID = string.Empty;
@@ -225,15 +228,17 @@ namespace Billing_Software
                         }
                     }
                 }
+                double GST = (double)18 / 100;
+                double GST1 = (GST * Convert.ToInt32(txt_Total.Text)) / 2;
                 var ParameterBillIDDetails = new DynamicParameters();
                 Guid UniqueBillID = Guid.NewGuid();
                 ParameterBillIDDetails.Add("@UniqueBillID", UniqueBillID);
                 ParameterBillIDDetails.Add("@CustomerBillID", CustomerBillID);
                 ParameterBillIDDetails.Add("@BillIDSeries", BillSeries);
                 ParameterBillIDDetails.Add("@BillIDCount", MaxBillIDCount);
-                ParameterBillIDDetails.Add("@CGST", txt_Cgst.Text.Trim());
-                ParameterBillIDDetails.Add("@SGST", txt_sgst.Text.ToString().Trim());
-                ParameterBillIDDetails.Add("@TotalAmount", txt_Total.Text.ToString().Trim());
+                ParameterBillIDDetails.Add("@CGST", GST1 );
+                ParameterBillIDDetails.Add("@SGST", GST1 );
+                ParameterBillIDDetails.Add("@TotalAmount", Convert.ToInt32(txt_Total.Text));
                 ParameterBillIDDetails.Add("@BillDate", DateTime.Today);
                 ParameterBillIDDetails.Add("@CreatedDate", DateTime.Now);
                 ParameterBillIDDetails.Add("@CreatedBy", new Guid(SessionValue.UniqueEmpID));
@@ -243,6 +248,9 @@ namespace Billing_Software
                     Item_Name = Convert.ToString(gv_Food_List.Rows[i].Cells[1].Value).Trim();
                     Item_Quantity = Convert.ToString(gv_Food_List.Rows[i].Cells[2].Value).Trim();
                     Item_Price = Convert.ToString(gv_Food_List.Rows[i].Cells[3].Value).Trim();
+                    CGST = Convert.ToDouble(gv_Food_List.Rows[i].Cells[4].Value);
+                    SGST = Convert.ToDouble(gv_Food_List.Rows[i].Cells[4].Value);
+                    int TotalPrice = Convert.ToInt32(gv_Food_List.Rows[i].Cells[5].Value);
                     using (DapperCon = Connection())
                     {
                         DapperCon.Open();
@@ -250,6 +258,7 @@ namespace Billing_Software
                         DateTime BillDate = DateTime.Today;
                         var ParameterTotalFoodBilling = new DynamicParameters();
                         ParameterTotalFoodBilling.Add("@Bill_Id", BillID);
+                        ParameterTotalFoodBilling.Add("@UniqueBillID", UniqueBillID);
                         ParameterTotalFoodBilling.Add("@CustomerBillID", CustomerBillID);
                         ParameterTotalFoodBilling.Add("@BillIDSeries", BillSeries);
                         ParameterTotalFoodBilling.Add("@BillIDCount", MaxBillIDCount);
@@ -257,6 +266,9 @@ namespace Billing_Software
                         ParameterTotalFoodBilling.Add("@Quantity", Item_Quantity);
                         ParameterTotalFoodBilling.Add("@Quality", "1");
                         ParameterTotalFoodBilling.Add("@Price", Item_Price);
+                        ParameterTotalFoodBilling.Add("@CGST", CGST);
+                        ParameterTotalFoodBilling.Add("@SGST", SGST);
+                        ParameterTotalFoodBilling.Add("@TotalPrice", TotalPrice);
                         ParameterTotalFoodBilling.Add("@BillDate", DateTime.Today);
                         ParameterTotalFoodBilling.Add("@CreatedDate", DateTime.Now);
                         ParameterTotalFoodBilling.Add("@CreatedBy", new Guid(SessionValue.UniqueEmpID));
@@ -473,6 +485,7 @@ namespace Billing_Software
         }
         private void calGridview()
         {
+            txt_Total.Text = "0";
             int cal = 0;
             int count = 1;
             for (int i = 0; i < gv_Food_List.Rows.Count; i++)
@@ -495,8 +508,20 @@ namespace Billing_Software
                     {
                         string Item_price = cmd_price.ExecuteScalar().ToString().Trim();
                         Total_price = Convert.ToInt32(Item_quantity) * Convert.ToInt32(Item_price);
-                        gv_Food_List.Rows[i].Cells[3].Value = Total_price;
                         cal = cal + Total_price;
+                        double GST = (double)18 / 100;
+                        double GST1 = (GST * Total_price) / 2;
+                        gv_Food_List.Rows[i].Cells[4].Value = GST1;
+                        gv_Food_List.Rows[i].Cells[3].Value = Total_price- GST1;
+                        gv_Food_List.Rows[i].Cells[5].Value = Total_price;
+                        if(txt_Total.Text != "")
+                        {
+                            txt_Total.Text=Convert.ToString(Convert.ToInt32(txt_Total.Text) + Convert.ToInt32(gv_Food_List.Rows[i].Cells[5].Value));
+                        }
+                        if (txt_Total.Text == "")
+                        {
+                            txt_Total.Text = Convert.ToString(Convert.ToInt32(txt_Total.Text) + Convert.ToInt32(gv_Food_List.Rows[i].Cells[5].Value));
+                        }
                     }
                     else
                     {
@@ -511,13 +536,14 @@ namespace Billing_Software
                 {
 
                 }
-                txt_Billamount.Text = cal.ToString().Trim();
-                int Total = Convert.ToInt32(txt_Billamount.Text);
-                double GST = (double)18 / 100;
-                double GST1 = (GST * Total) / 2;
-                txt_Cgst.Text = Convert.ToString(GST1);
-                txt_sgst.Text = Convert.ToString(GST1);
-                txt_Total.Text = Convert.ToString(Total + (GST1 * 2));
+                //txt_Billamount.Text = cal.ToString().Trim();
+                //int Total = Convert.ToInt32(txt_Billamount.Text);
+                //double GST = (double)18 / 100;
+                //double GST1 = (GST * Total) / 2;
+                //txt_Cgst.Text = Convert.ToString(GST1);
+                //txt_sgst.Text = Convert.ToString(GST1);
+                //txt_Total.Text = Convert.ToString(Total + (GST1 * 2));
+
                 con.Close();
             }
         }
@@ -591,7 +617,7 @@ namespace Billing_Software
         }
         private void gv_Food_List_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 4)
+            if (e.ColumnIndex == 6)
             {
                 DataGridViewRow row_index = gv_Food_List.Rows[e.RowIndex];
                 if (gv_Food_List.Rows.Count > 1)
@@ -602,24 +628,7 @@ namespace Billing_Software
                         gv_Food_List.Rows.RemoveAt(row);
                         gv_Food_List.CurrentCell = gv_Food_List.Rows[row].Cells[1];
                         gv_Food_List.CurrentCell.Selected = true;
-                        //con.Open();
-                        //string bill_id = Convert.ToString(row_index.Cells[0].Value).Trim();
-                        //string Item_Price = Convert.ToString(row_index.Cells[3].Value).Trim();
-                        //string sql_Delete = "delete from Food_Item_Bill where Bill_Id='" + bill_id + "'";
-                        //SqlCommand cmd = new SqlCommand(sql_Delete, con);
-                        //cmd.ExecuteNonQuery();
-                        //con.Close();
-                        //Gridview();
-                        //int Total_value = int.Parse(txt_Billamount.Text.Trim());
-                        //int value = Total_value - int.Parse(Item_Price);
-                        //txt_Billamount.Text = value.ToString().Trim();
-                        //double GST = (double)18 / 100;
-                        //double GST1 = (GST * value) / 2;
-                        //txt_Cgst.Text = GST1.ToString("00.00").Trim();
-                        //txt_sgst.Text = GST1.ToString("00.00").Trim();
-                        //double add_double_value = GST1 + GST1;
-                        //int Total_Amount1 = value + Convert.ToInt32(add_double_value);
-                        //txt_Total.Text = Convert.ToString(Total_Amount1).Trim();
+                        
                     }
                     else
                     {
