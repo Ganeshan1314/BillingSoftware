@@ -145,6 +145,7 @@ namespace Billing_Software
                 string CustomerBillID = string.Empty;
                 int BillSeries = 0;
                 int MaxBillIDCount = 1;
+                int CustomerBillIdIntValue = 1;
                 using (DapperCon = Connection())
                 {
                     DapperCon.Open();
@@ -167,8 +168,8 @@ namespace Billing_Software
                     }
                     if (id == 1)
                     {
-                        BillSeries = 65;
-                        CustomerBillID = "A" + id;
+                        BillSeries = 1;
+                        CustomerBillID = "A" + id+"-"+"1";
                     }
                     else
                     {
@@ -182,36 +183,28 @@ namespace Billing_Software
                         var ReaderCountBillIDSeries = con.ExecuteReader("CountBillIDSeries", ParameterCountBillIDSeries, commandType: CommandType.StoredProcedure);
                         DataTable DtCountBillIDSeries = new DataTable();
                         DtCountBillIDSeries.Load(ReaderCountBillIDSeries);
-                        int CountBillIDSeries = 0;
+                        int CountBillIDSeries = 1;
+                        var ReaderCustomerBillIdIntValue = con.ExecuteReader("selectCustomerBillIDIntValue", commandType: CommandType.StoredProcedure);
+                        DataTable DtCustomerBillIdIntValue = new DataTable();
+                        DtCustomerBillIdIntValue.Load(ReaderCustomerBillIdIntValue);
+                        CustomerBillIdIntValue = Convert.ToInt32(DtCustomerBillIdIntValue.Rows[0]["CustomerBillIDInt"])+1;
                         if (DtCountBillIDSeries.Rows.Count > 0)
                         {
                             CountBillIDSeries = Convert.ToInt32(DtCountBillIDSeries.Rows[0]["CountBillIDSeries"]);
                         }
                         int Length = BillSeries.ToString().Length;
-                        if (Length == 2 && BillSeries >= 65 && BillSeries < 90 && CountBillIDSeries == 100000)
+                        if (CountBillIDSeries == 10000)
                         {
                             BillSeries = BillSeries + 1;
-                            CustomerBillID = ((char)BillSeries).ToString()+ "1";
+                            CustomerBillID = "A" + BillSeries + "-" + "1";
+                            CustomerBillIdIntValue =  1;
                         }
-                        else if(BillSeries == 90)
+                        if (CountBillIDSeries < 10000)
                         {
-                            BillSeries = 6565;
-                            CustomerBillID = "AA";
-                        }
-                        if (Length == 4 && CountBillIDSeries == 100000 && Convert.ToInt32(BillSeries.ToString().Substring(2)) < 90 )
-                        {
-                            BillSeries = BillSeries + 1;
-                            string SplitingValue =BillSeries.ToString().Substring(0, 2);
-                            int split = Convert.ToInt32(SplitingValue);
-                            CustomerBillID = ((char)split).ToString();
-                            SplitingValue = BillSeries.ToString().Substring(2);
-                            split = Convert.ToInt32(SplitingValue);
-                            CustomerBillID = CustomerBillID+ ((char)split).ToString()+ "1";
-                        }
-                        if (Length == 2 && BillSeries >= 65 && BillSeries < 90 && CountBillIDSeries < 100000)
-                        {
-                            CountBillIDSeries = CountBillIDSeries + 1;
-                            CustomerBillID = ((char)BillSeries).ToString() + CountBillIDSeries.ToString();
+                            if (Convert.ToString(DtCustomerBillIdIntValue.Rows[0]["CustomerBillIDInt"]) != "")
+                            {
+                                CustomerBillID = "A"+ BillSeries+"-" + Convert.ToInt32(CustomerBillIdIntValue);
+                            }
                         }
                     }
                     var ParameterMaxTodayBillIDCount = new DynamicParameters();
@@ -234,6 +227,7 @@ namespace Billing_Software
                 Guid UniqueBillID = Guid.NewGuid();
                 ParameterBillIDDetails.Add("@UniqueBillID", UniqueBillID);
                 ParameterBillIDDetails.Add("@CustomerBillID", CustomerBillID);
+                ParameterBillIDDetails.Add("@CustomerBillIDIntValue", CustomerBillIdIntValue);
                 ParameterBillIDDetails.Add("@BillIDSeries", BillSeries);
                 ParameterBillIDDetails.Add("@BillIDCount", MaxBillIDCount);
                 ParameterBillIDDetails.Add("@CGST", GST1 );
@@ -262,6 +256,7 @@ namespace Billing_Software
                         ParameterTotalFoodBilling.Add("@CustomerBillID", CustomerBillID);
                         ParameterTotalFoodBilling.Add("@BillIDSeries", BillSeries);
                         ParameterTotalFoodBilling.Add("@BillIDCount", MaxBillIDCount);
+                        //ParameterTotalFoodBilling.Add("@Item_name", Item_Name);
                         ParameterTotalFoodBilling.Add("@Item_name", Item_Name);
                         ParameterTotalFoodBilling.Add("@Quantity", Item_Quantity);
                         ParameterTotalFoodBilling.Add("@Quality", "1");
@@ -272,9 +267,26 @@ namespace Billing_Software
                         ParameterTotalFoodBilling.Add("@BillDate", DateTime.Today);
                         ParameterTotalFoodBilling.Add("@CreatedDate", DateTime.Now);
                         ParameterTotalFoodBilling.Add("@CreatedBy", new Guid(SessionValue.UniqueEmpID));
-                        con.Execute("InsertTotalFoodBilling", ParameterTotalFoodBilling, commandType: CommandType.StoredProcedure);
+                        DapperCon.Execute("InsertTotalFoodBilling", ParameterTotalFoodBilling, commandType: CommandType.StoredProcedure);
                     }
                 }
+                DataTable DtPrintBill = new DataTable();
+                using (DapperCon = Connection())
+                {
+                    DapperCon.Open();
+                    var ParameterPrintBill = new DynamicParameters();
+                    ParameterPrintBill.Add("@UniqueBillID", UniqueBillID);
+                    var ReaderPrintBill = DapperCon.ExecuteReader("selectRecordPrintBill", ParameterPrintBill,commandType:CommandType.StoredProcedure);
+                    DtPrintBill.Load(ReaderPrintBill);
+                }
+                Bill_Invoice crystal_report = new Bill_Invoice();
+                TextObject text_Date = (TextObject)crystal_report.ReportDefinition.Sections["Section1"].ReportObjects["Date"];
+                text_Date.Text = DateTime.Now.ToString("dd/MMM/yyyy HH:mm tt");
+                crystal_report.SetDataSource(DtPrintBill);
+                Invoice BillInvoice = new Invoice();
+                BillInvoice.SetDataSource(DtPrintBill);
+                crystalReportViewer2.ReportSource = BillInvoice;
+                //crystalReportViewer2.ReportSource = crystal_report;
                 //con.Open();
                 //int Bill_id = 0;
                 //if (gv_Food_List.Rows.Count > 1)
@@ -300,7 +312,7 @@ namespace Billing_Software
                 //    con.Execute("insertBillMaster", ParameterBillMaster,commandType:CommandType.StoredProcedure);
                 //    for (int j = 0; j < gv_Food_List.Rows.Count - 1; j++)
                 //    {
-                        
+
                 //        SqlCommand cmd_Insert = new SqlCommand();
                 //        cmd_Insert.Connection = con;
                 //        cmd_Insert.CommandType = CommandType.StoredProcedure;
@@ -379,7 +391,7 @@ namespace Billing_Software
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show("Error While Inserting the Data");
             }
         }
         private void Gridview()

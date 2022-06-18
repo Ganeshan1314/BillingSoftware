@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.ddl_Item_Name = new System.Windows.Forms.ComboBox();
@@ -38,13 +38,6 @@
             this.txt_Quantity = new System.Windows.Forms.TextBox();
             this.Add = new System.Windows.Forms.Button();
             this.gv_Food_List = new System.Windows.Forms.DataGridView();
-            this.SNO = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Item_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Item_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Tax = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Total = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -57,6 +50,13 @@
             this.crystalReportViewer1 = new CrystalDecisions.Windows.Forms.CrystalReportViewer();
             this.crystalReportViewer2 = new CrystalDecisions.Windows.Forms.CrystalReportViewer();
             this.txt_ItemId = new System.Windows.Forms.TextBox();
+            this.SNO = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Item_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Item_Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Tax = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gv_Food_List)).BeginInit();
             this.SuspendLayout();
             // 
@@ -134,14 +134,14 @@
             // 
             // gv_Food_List
             // 
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.InactiveCaption;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.InactiveCaption;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gv_Food_List.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.InactiveCaption;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.InactiveCaption;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gv_Food_List.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.gv_Food_List.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gv_Food_List.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.SNO,
@@ -151,14 +151,14 @@
             this.Tax,
             this.Total,
             this.Delete});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.gv_Food_List.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.gv_Food_List.DefaultCellStyle = dataGridViewCellStyle15;
             this.gv_Food_List.EnableHeadersVisualStyles = false;
             this.gv_Food_List.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.gv_Food_List.Location = new System.Drawing.Point(96, 153);
@@ -175,65 +175,6 @@
             this.gv_Food_List.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.gv_Food_List_EditingControlShowing);
             this.gv_Food_List.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.gv_Food_List_RowHeaderMouseClick);
             this.gv_Food_List.KeyDown += new System.Windows.Forms.KeyEventHandler(this.gv_Food_List_KeyDown);
-            // 
-            // SNO
-            // 
-            this.SNO.HeaderText = "SNO";
-            this.SNO.MinimumWidth = 6;
-            this.SNO.Name = "SNO";
-            this.SNO.Width = 125;
-            // 
-            // Item_name
-            // 
-            this.Item_name.DataPropertyName = "Item_name";
-            this.Item_name.HeaderText = "Item Name";
-            this.Item_name.MinimumWidth = 6;
-            this.Item_name.Name = "Item_name";
-            this.Item_name.Width = 200;
-            // 
-            // Quantity
-            // 
-            this.Quantity.DataPropertyName = "Quantity";
-            this.Quantity.HeaderText = "Quantity";
-            this.Quantity.MinimumWidth = 6;
-            this.Quantity.Name = "Quantity";
-            this.Quantity.Width = 125;
-            // 
-            // Item_Id
-            // 
-            this.Item_Id.DataPropertyName = "Bill_Id";
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Item_Id.DefaultCellStyle = dataGridViewCellStyle5;
-            this.Item_Id.HeaderText = "Taxable";
-            this.Item_Id.MinimumWidth = 6;
-            this.Item_Id.Name = "Item_Id";
-            this.Item_Id.ReadOnly = true;
-            this.Item_Id.Width = 125;
-            // 
-            // Tax
-            // 
-            this.Tax.HeaderText = "Tax";
-            this.Tax.MinimumWidth = 6;
-            this.Tax.Name = "Tax";
-            this.Tax.Width = 125;
-            // 
-            // Total
-            // 
-            this.Total.DataPropertyName = "Price";
-            this.Total.HeaderText = "Amount";
-            this.Total.MinimumWidth = 6;
-            this.Total.Name = "Total";
-            this.Total.Width = 125;
-            // 
-            // Delete
-            // 
-            this.Delete.DataPropertyName = "Bill_Id";
-            this.Delete.HeaderText = "Delete";
-            this.Delete.MinimumWidth = 6;
-            this.Delete.Name = "Delete";
-            this.Delete.Text = "Delete";
-            this.Delete.UseColumnTextForButtonValue = true;
-            this.Delete.Width = 125;
             // 
             // label5
             // 
@@ -356,13 +297,12 @@
             this.crystalReportViewer2.ActiveViewIndex = -1;
             this.crystalReportViewer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.crystalReportViewer2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.crystalReportViewer2.Location = new System.Drawing.Point(23, 649);
+            this.crystalReportViewer2.Location = new System.Drawing.Point(152, 480);
             this.crystalReportViewer2.Margin = new System.Windows.Forms.Padding(4);
             this.crystalReportViewer2.Name = "crystalReportViewer2";
-            this.crystalReportViewer2.Size = new System.Drawing.Size(819, 236);
+            this.crystalReportViewer2.Size = new System.Drawing.Size(490, 418);
             this.crystalReportViewer2.TabIndex = 19;
             this.crystalReportViewer2.ToolPanelWidth = 267;
-            this.crystalReportViewer2.Visible = false;
             // 
             // txt_ItemId
             // 
@@ -376,6 +316,67 @@
             this.txt_ItemId.Size = new System.Drawing.Size(120, 29);
             this.txt_ItemId.TabIndex = 22;
             this.txt_ItemId.Visible = false;
+            // 
+            // SNO
+            // 
+            this.SNO.HeaderText = "SNO";
+            this.SNO.MinimumWidth = 6;
+            this.SNO.Name = "SNO";
+            this.SNO.Width = 125;
+            // 
+            // Item_name
+            // 
+            this.Item_name.DataPropertyName = "Item_name";
+            this.Item_name.HeaderText = "Item Name";
+            this.Item_name.MinimumWidth = 6;
+            this.Item_name.Name = "Item_name";
+            this.Item_name.Width = 200;
+            // 
+            // Quantity
+            // 
+            this.Quantity.DataPropertyName = "Quantity";
+            this.Quantity.HeaderText = "Quantity";
+            this.Quantity.MinimumWidth = 6;
+            this.Quantity.Name = "Quantity";
+            this.Quantity.Width = 125;
+            // 
+            // Item_Id
+            // 
+            this.Item_Id.DataPropertyName = "Bill_Id";
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Item_Id.DefaultCellStyle = dataGridViewCellStyle14;
+            this.Item_Id.HeaderText = "Taxable";
+            this.Item_Id.MinimumWidth = 6;
+            this.Item_Id.Name = "Item_Id";
+            this.Item_Id.ReadOnly = true;
+            this.Item_Id.Width = 125;
+            // 
+            // Tax
+            // 
+            this.Tax.HeaderText = "Tax";
+            this.Tax.MinimumWidth = 6;
+            this.Tax.Name = "Tax";
+            this.Tax.ReadOnly = true;
+            this.Tax.Width = 125;
+            // 
+            // Total
+            // 
+            this.Total.DataPropertyName = "Price";
+            this.Total.HeaderText = "Amount";
+            this.Total.MinimumWidth = 6;
+            this.Total.Name = "Total";
+            this.Total.ReadOnly = true;
+            this.Total.Width = 125;
+            // 
+            // Delete
+            // 
+            this.Delete.DataPropertyName = "Bill_Id";
+            this.Delete.HeaderText = "Delete";
+            this.Delete.MinimumWidth = 6;
+            this.Delete.Name = "Delete";
+            this.Delete.Text = "Delete";
+            this.Delete.UseColumnTextForButtonValue = true;
+            this.Delete.Width = 125;
             // 
             // Food_Items_Bill
             // 
