@@ -12,6 +12,7 @@ using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 using System.Globalization;
 using Dapper;
+using CrystalDecisions.Windows.Forms;
 
 namespace Billing_Software
 {
@@ -58,6 +59,7 @@ namespace Billing_Software
             txt_Total.Text = "0"; 
         }
         int Total_quntity, exit_quantity, Total_Amount;
+        int TotalPage = 0;
         private void Add_Click(object sender, EventArgs e)
         {
             string value = string.Empty;
@@ -279,13 +281,42 @@ namespace Billing_Software
                     var ReaderPrintBill = DapperCon.ExecuteReader("selectRecordPrintBill", ParameterPrintBill,commandType:CommandType.StoredProcedure);
                     DtPrintBill.Load(ReaderPrintBill);
                 }
-                Bill_Invoice crystal_report = new Bill_Invoice();
-                TextObject text_Date = (TextObject)crystal_report.ReportDefinition.Sections["Section1"].ReportObjects["Date"];
-                text_Date.Text = DateTime.Now.ToString("dd/MMM/yyyy HH:mm tt");
-                crystal_report.SetDataSource(DtPrintBill);
+
                 Invoice BillInvoice = new Invoice();
+                //var printerSettings = new System.Drawing.Printing.PrinterSettings();
+                //var pageSettings = new System.Drawing.Printing.PageSettings(printerSettings);
+                //pageSettings.PaperSize = new System.Drawing.Printing.PaperSize("newsize", 230, 150); // Custom size (100=1 inch)
+                //pageSettings.Margins = new System.Drawing.Printing.Margins(0, 0, 0, 0);
+                //BillInvoice.PrintOptions.DissociatePageSizeAndPrinterPaperSize = true;
+                //BillInvoice.PrintOptions.CopyFrom(printerSettings, pageSettings);
+                TextObject Date = (TextObject)BillInvoice.ReportDefinition.ReportObjects["Date"];
+                Date.Text = DateTime.Now.ToString("dd-MM-yyyy hh:mm tt").Trim();
                 BillInvoice.SetDataSource(DtPrintBill);
                 crystalReportViewer2.ReportSource = BillInvoice;
+                string IncreamentDecreament = string.Empty;
+                //for(int i=0;i<)
+                if(DtPrintBill.Rows.Count > 0 && TotalPage > 1)
+                {
+                    IncreamentDecreament = "Increament";
+                    var printerSettings = new System.Drawing.Printing.PrinterSettings();
+                    var pageSettings = new System.Drawing.Printing.PageSettings(printerSettings);
+                    pageSettings.PaperSize = new System.Drawing.Printing.PaperSize("newsize", 230, 150); // Custom size (100=1 inch)
+                    pageSettings.Margins = new System.Drawing.Printing.Margins(0, 0, 0, 0);
+                    BillInvoice.PrintOptions.DissociatePageSizeAndPrinterPaperSize = true;
+                    BillInvoice.PrintOptions.CopyFrom(printerSettings, pageSettings);
+                    BillInvoice.PrintOptions.PaperOrientation = PaperOrientation.Portrait;
+                    BillInvoice.PrintOptions.PaperSize = PaperSize.PaperA3;
+                    crystalReportViewer2.ShowLastPage();
+                    TotalPage = crystalReportViewer2.GetCurrentPageNumber();
+                }
+                
+                //viewer.ShowFirstPage();
+                //pageNo.Text = viewer.GetCurrentPageNumber() + " of " + TotalPage;
+                //BillInvoice.PrintToPrinter(1, false, 0, 0);
+                //report.Load(repName);
+
+                //report.PrintToPrinter(1, false, 0, 0);
+
                 //crystalReportViewer2.ReportSource = crystal_report;
                 //con.Open();
                 //int Bill_id = 0;
