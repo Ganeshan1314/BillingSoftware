@@ -281,42 +281,48 @@ namespace Billing_Software
                     var ReaderPrintBill = DapperCon.ExecuteReader("selectRecordPrintBill", ParameterPrintBill,commandType:CommandType.StoredProcedure);
                     DtPrintBill.Load(ReaderPrintBill);
                 }
-
                 Invoice BillInvoice = new Invoice();
-                //var printerSettings = new System.Drawing.Printing.PrinterSettings();
-                //var pageSettings = new System.Drawing.Printing.PageSettings(printerSettings);
-                //pageSettings.PaperSize = new System.Drawing.Printing.PaperSize("newsize", 230, 150); // Custom size (100=1 inch)
-                //pageSettings.Margins = new System.Drawing.Printing.Margins(0, 0, 0, 0);
-                //BillInvoice.PrintOptions.DissociatePageSizeAndPrinterPaperSize = true;
-                //BillInvoice.PrintOptions.CopyFrom(printerSettings, pageSettings);
+                int CrystalReportHeight = 100;
                 TextObject Date = (TextObject)BillInvoice.ReportDefinition.ReportObjects["Date"];
                 Date.Text = DateTime.Now.ToString("dd-MM-yyyy hh:mm tt").Trim();
                 BillInvoice.SetDataSource(DtPrintBill);
                 crystalReportViewer2.ReportSource = BillInvoice;
-                string IncreamentDecreament = string.Empty;
-                //for(int i=0;i<)
-                if(DtPrintBill.Rows.Count > 0 && TotalPage > 1)
+                var printerSettings = new System.Drawing.Printing.PrinterSettings();
+                var pageSettings = new System.Drawing.Printing.PageSettings(printerSettings);
+                pageSettings.PaperSize = new System.Drawing.Printing.PaperSize("newsize", 230, CrystalReportHeight); // Custom size (100=1 inch)
+                pageSettings.Margins = new System.Drawing.Printing.Margins(0, 0, 0, 0);
+                BillInvoice.PrintOptions.DissociatePageSizeAndPrinterPaperSize = true;
+                BillInvoice.PrintOptions.CopyFrom(printerSettings, pageSettings);
+                BillInvoice.PrintOptions.PaperOrientation = PaperOrientation.Portrait;
+                BillInvoice.PrintOptions.PaperSize = PaperSize.PaperA3;
+                crystalReportViewer2.ShowLastPage();
+                TotalPage = crystalReportViewer2.GetCurrentPageNumber();
+                while (TotalPage>1 || TotalPage == 0)
                 {
-                    IncreamentDecreament = "Increament";
-                    var printerSettings = new System.Drawing.Printing.PrinterSettings();
-                    var pageSettings = new System.Drawing.Printing.PageSettings(printerSettings);
-                    pageSettings.PaperSize = new System.Drawing.Printing.PaperSize("newsize", 230, 150); // Custom size (100=1 inch)
-                    pageSettings.Margins = new System.Drawing.Printing.Margins(0, 0, 0, 0);
-                    BillInvoice.PrintOptions.DissociatePageSizeAndPrinterPaperSize = true;
-                    BillInvoice.PrintOptions.CopyFrom(printerSettings, pageSettings);
-                    BillInvoice.PrintOptions.PaperOrientation = PaperOrientation.Portrait;
-                    BillInvoice.PrintOptions.PaperSize = PaperSize.PaperA3;
-                    crystalReportViewer2.ShowLastPage();
-                    TotalPage = crystalReportViewer2.GetCurrentPageNumber();
+                    if (DtPrintBill.Rows.Count > 0)
+                    {
+                        BillInvoice.SetDataSource(DtPrintBill);
+                        crystalReportViewer2.ReportSource = BillInvoice;
+                        printerSettings = new System.Drawing.Printing.PrinterSettings();
+                        pageSettings = new System.Drawing.Printing.PageSettings(printerSettings);
+                        pageSettings.PaperSize = new System.Drawing.Printing.PaperSize("newsize", 230, CrystalReportHeight); // Custom size (100=1 inch)
+                        pageSettings.Margins = new System.Drawing.Printing.Margins(0, 0, 0, 0);
+                        BillInvoice.PrintOptions.DissociatePageSizeAndPrinterPaperSize = true;
+                        BillInvoice.PrintOptions.CopyFrom(printerSettings, pageSettings);
+                        BillInvoice.PrintOptions.PaperOrientation = PaperOrientation.Portrait;
+                        BillInvoice.PrintOptions.PaperSize = PaperSize.PaperA3;
+                        crystalReportViewer2.ShowLastPage();
+                        TotalPage = crystalReportViewer2.GetCurrentPageNumber();
+                    }
+                    if(TotalPage > 2)
+                    {
+                        TotalPage--;
+                    }
+                    CrystalReportHeight += 25;
                 }
-                
-                //viewer.ShowFirstPage();
-                //pageNo.Text = viewer.GetCurrentPageNumber() + " of " + TotalPage;
-                //BillInvoice.PrintToPrinter(1, false, 0, 0);
+                BillInvoice.PrintToPrinter(1, false, 0, 0);
                 //report.Load(repName);
-
                 //report.PrintToPrinter(1, false, 0, 0);
-
                 //crystalReportViewer2.ReportSource = crystal_report;
                 //con.Open();
                 //int Bill_id = 0;
@@ -343,7 +349,6 @@ namespace Billing_Software
                 //    con.Execute("insertBillMaster", ParameterBillMaster,commandType:CommandType.StoredProcedure);
                 //    for (int j = 0; j < gv_Food_List.Rows.Count - 1; j++)
                 //    {
-
                 //        SqlCommand cmd_Insert = new SqlCommand();
                 //        cmd_Insert.Connection = con;
                 //        cmd_Insert.CommandType = CommandType.StoredProcedure;
@@ -377,20 +382,17 @@ namespace Billing_Software
                 //gv_Food_List.Focus();
                 //gv_Food_List.CurrentCell = gv_Food_List.Rows[0].Cells[1];
                 //gv_Food_List.CurrentCell.Selected = true;
-
                 //string sql_Get_current_list = "select * from Food_Item_Bill";
                 //SqlCommand cmd_get_list = new SqlCommand(sql_Get_current_list, con);
                 //DataTable dt_insert = new DataTable();
                 //SqlDataAdapter adp_get_list = new SqlDataAdapter(cmd_get_list);
                 //adp_get_list.Fill(dt_insert);
-
                 //string sql_Bill_Id = "select max(Bill_Id) as Bill_Id from Total_Food_Billing";
                 //SqlCommand cmd_Bill_Id = new SqlCommand(sql_Bill_Id, con);
                 //DataTable dt_Bill_Id = new DataTable();
                 //SqlDataAdapter adp_Bill_Id = new SqlDataAdapter(cmd_Bill_Id);
                 //adp_Bill_Id.Fill(dt_Bill_Id);
                 //int last_Bill_id;
-
                 //if (dt_Bill_Id.Rows[0]["Bill_Id"].ToString().Trim() != "")
                 //{
                 //    last_Bill_id = int.Parse(dt_Bill_Id.Rows[0]["Bill_Id"].ToString().Trim()) + 1;
@@ -414,7 +416,6 @@ namespace Billing_Software
                 //        cmd_insert.Parameters.AddWithValue("@Date_Time", DateTime.Now);
                 //        cmd_insert.Parameters.AddWithValue("@Bill_id", last_Bill_id);
                 //        cmd_insert.ExecuteNonQuery();
-
                 //    }
                 //}
 
