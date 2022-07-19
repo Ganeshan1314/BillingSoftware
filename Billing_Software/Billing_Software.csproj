@@ -181,6 +181,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataSet1.xsd</DependentUpon>
     </Compile>
+    <Compile Include="FoodBillItemTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FoodBillItemTest.Designer.cs">
+      <DependentUpon>FoodBillItemTest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Food_Items_Bill.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -265,6 +271,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FoodBillItemTest.resx">
+      <DependentUpon>FoodBillItemTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Food_Items_Bill.resx">
       <DependentUpon>Food_Items_Bill.cs</DependentUpon>

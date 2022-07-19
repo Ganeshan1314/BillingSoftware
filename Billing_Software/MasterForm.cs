@@ -39,7 +39,7 @@ namespace Billing_Software
         private void fooditembill_Click(object sender, EventArgs e)
         {
             this.Hide();
-            Food_Items_Bill food_item = new Food_Items_Bill();
+            s food_item = new s();
             food_item.Show();
         }
 

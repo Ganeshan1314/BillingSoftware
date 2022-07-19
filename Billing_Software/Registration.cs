@@ -19,7 +19,6 @@ namespace Billing_Software
         public Registration()
         {
             InitializeComponent();
-            //txt_empid.ReadOnly = true;
             if (ApprovalList.Emp_id_public == null)
             {
                 Employee_Id();
@@ -31,6 +30,41 @@ namespace Billing_Software
             }
             DropDownDepartment();
             DropDownUserType();
+            AutoComplete();
+            AutoCompleteLastName();
+
+        }
+        private void AutoComplete()
+        {
+            con.Open();
+            string sql_autocomplete = "select Item_Name from Food_Item_List";
+            SqlCommand cmd_autocomplete = new SqlCommand(sql_autocomplete, con);
+            SqlDataReader dr = cmd_autocomplete.ExecuteReader();
+            AutoCompleteStringCollection mycollection = new AutoCompleteStringCollection();
+            while (dr.Read())
+            {
+                mycollection.Add(dr.GetString(0));
+            }
+            txt_Firstname.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txt_Firstname.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            txt_Firstname.AutoCompleteCustomSource = mycollection;
+            con.Close();
+        }
+        private void AutoCompleteLastName()
+        {
+            con.Open();
+            string sql_autocomplete = "select Item_Name from Food_Item_List";
+            SqlCommand cmd_autocomplete = new SqlCommand(sql_autocomplete, con);
+            SqlDataReader dr = cmd_autocomplete.ExecuteReader();
+            AutoCompleteStringCollection mycollection = new AutoCompleteStringCollection();
+            while (dr.Read())
+            {
+                mycollection.Add(dr.GetString(0));
+            }
+            txt_Lastname.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txt_Lastname.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            txt_Lastname.AutoCompleteCustomSource = mycollection;
+            con.Close();
         }
         private void DropDownDepartment()
         {
